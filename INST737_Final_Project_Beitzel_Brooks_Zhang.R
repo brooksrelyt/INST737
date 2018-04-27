@@ -8,9 +8,9 @@
 
 
 # We stored the 2017-18 season of NCAA Division 1 Men's Basketball basketball team statistics at the below URL on Github, which we read in for use in R
-Season_Stats_201718 <- read.csv(url("https://raw.githubusercontent.com/brooksrelyt/INST737/master/NCAA_Basketball_Season_Stats_2017_18.csv"));
+Season_Stats_201718 <- read.csv(url("https://raw.githubusercontent.com/brooksrelyt/INST737/master/NCAA_Basketball_Season_Stats_2017_18.csv"))
 
 # We stored the 2017-18 post-season single elimination tournament matchups in the following file (along with the actual winner, 
 # as the post-season is now over), so that we can test out predictive model with the actual results of the matchup
-Postseason_Matchups_201718 <- read.csv(url("https://raw.githubusercontent.com/brooksrelyt/INST737/master/NCAA_Basketball_Post_Season_Matchups_2017-18.csv"));
+Postseason_Matchups_201718 <- read.csv(url("https://raw.githubusercontent.com/brooksrelyt/INST737/master/NCAA_Basketball_Post_Season_Matchups_2017-18.csv"))
 
