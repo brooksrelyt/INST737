@@ -14,3 +14,18 @@ Season_Stats_201718 <- read.csv(url("https://raw.githubusercontent.com/brooksrel
 # as the post-season is now over), so that we can test out predictive model with the actual results of the matchup
 Postseason_Matchups_201718 <- read.csv(url("https://raw.githubusercontent.com/brooksrelyt/INST737/master/NCAA_Basketball_Post_Season_Matchups_2017-18.csv"))
 
+names(Postseason_Matchups_201718)=c("Tournament_Type","Rk","Rk2","Winner_ID")
+
+a=merge(Season_Stats_201718,Postseason_Matchups_201718, by="Rk")
+
+colnames(a)[colnames(a)=="Rk"] <- "Team1"
+colnames(a)[colnames(a)=="Rk2"] <- "Rk"
+colnames(a)[colnames(a)=="Rk"] <- "Rk"
+
+View(Season_Stats_201718)
+
+b=merge(Season_Stats_201718,a, by="Rk")
+
+colnames(b)[colnames(b)=="Rk"] <- "Team2"
+
+write.csv(b,file="E:/2018 spring/INST 737/project/merge201718.csv", row.names=F)
