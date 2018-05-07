@@ -27,7 +27,7 @@ Matchups_201718 <- read.csv(url("https://raw.githubusercontent.com/brooksrelyt/I
 Matchups_201617 <- read.csv(url("https://raw.githubusercontent.com/brooksrelyt/INST737/master/NCAA_Matchups_2016_2017.csv"));
 
 
-# Here will create a data frame that will hold the matchups for 16-17, as well as the season-long statistics for the two teams in the matchup
+# Here we will create a data frame that will hold the matchups for 16-17, as well as the season-long statistics for the two teams in the matchup
 Matchups_201617_With_Stats <- merge(Matchups_201617, Season_Stats_201617, by.x=c("Team_A_ID"), by.y=c("School_ID"));
 Matchups_201617_With_Stats <- merge(Matchups_201617_With_Stats, Season_Stats_201617, by.x=c("Team_B_ID"), by.y=c("School_ID"));
 
@@ -47,7 +47,7 @@ Matchups_201617_With_Stats$Block_Percentage_Difference <- Matchups_201617_With_S
 logit_model <- glm(Team_A_Won ~ ORtg_Difference + True_Shooting_Percentage_Difference + True_Rebound_Percentage_Difference + Steal_Percentage_Difference + TO_Percentage_Difference + Block_Percentage_Difference, data = Matchups_201617_With_Stats, family = "binomial");
 summary(logit_model);
 
-# Here will create a data frame that will hold the matchups for 16-17, as well as the season-long statistics for the two teams in the matchup
+# Here we will create a data frame that will hold the matchups for 16-17, as well as the season-long statistics for the two teams in the matchup
 Matchups_201718_With_Stats <- merge(Matchups_201718, Season_Stats_201718, by.x=c("Team_A_ID"), by.y=c("School_ID"));
 Matchups_201718_With_Stats <- merge(Matchups_201718_With_Stats, Season_Stats_201718, by.x=c("Team_B_ID"), by.y=c("School_ID"));
 
@@ -59,20 +59,22 @@ Matchups_201718_With_Stats$Steal_Percentage_Difference <- Matchups_201718_With_S
 Matchups_201718_With_Stats$TO_Percentage_Difference <- Matchups_201718_With_Stats$TO_Percentage.x - Matchups_201718_With_Stats$TO_Percentage.y;
 Matchups_201718_With_Stats$Block_Percentage_Difference <- Matchups_201718_With_Stats$Block_Percentage.x - Matchups_201718_With_Stats$Block_Percentage.y;
 
-# This created a new column with a prediction of the probability that the answer is correct/TRUE
+# This created a new column with a prediction of the probability that Team A Wins (1) or Loses (0)
 Matchups_201718_With_Stats$Team_A_logit_prediction <- predict(logit_model, Matchups_201718_With_Stats, type="response");
 
-# Using the probablity created above, make the guess of TRUE (correct) or FALSE (incorrect)
+# Using the probablity created above, make the guess of whether Team A Wins (1) or Loses()
 Matchups_201718_With_Stats$Team_A_Logit_Model_Predict <- ifelse(Matchups_201718_With_Stats$Team_A_logit_prediction >= 0.5, 1, 0);
 
+#Bring the library for the function below used to compare the actual game results with our prediction results
 library(expss)
 
-# Output the results of our logistic regression predictions versus the actual correct answers
+# Output the results of our logistic regression predictions versus the actual Team A game results
 cro(Matchups_201718_With_Stats$Team_A_Won, Matchups_201718_With_Stats$Team_A_Logit_Model_Predict);
 
 
 
-# Export the data frame to excel
+# Export the data frame to CSV files for comparison outside of R, in Excel
 write.csv(Matchups_201617_With_Stats,file="Matchups_201617_With_Stats.csv", row.names=FALSE);
 
 write.csv(Matchups_201718_With_Stats,file="Matchups_201718_With_Stats.csv", row.names=FALSE);
+
