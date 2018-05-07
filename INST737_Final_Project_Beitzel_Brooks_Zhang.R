@@ -47,7 +47,7 @@ Matchups_201617_With_Stats$Block_Percentage_Difference <- Matchups_201617_With_S
 logit_model <- glm(Team_A_Won ~ ORtg_Difference + True_Shooting_Percentage_Difference + True_Rebound_Percentage_Difference + Steal_Percentage_Difference + TO_Percentage_Difference + Block_Percentage_Difference, data = Matchups_201617_With_Stats, family = "binomial");
 summary(logit_model);
 
-# Here we will create a data frame that will hold the matchups for 16-17, as well as the season-long statistics for the two teams in the matchup
+# Here we will create a data frame that will hold the matchups for 17-18, as well as the season-long statistics for the two teams in the matchup
 Matchups_201718_With_Stats <- merge(Matchups_201718, Season_Stats_201718, by.x=c("Team_A_ID"), by.y=c("School_ID"));
 Matchups_201718_With_Stats <- merge(Matchups_201718_With_Stats, Season_Stats_201718, by.x=c("Team_B_ID"), by.y=c("School_ID"));
 
@@ -77,4 +77,7 @@ cro(Matchups_201718_With_Stats$Team_A_Won, Matchups_201718_With_Stats$Team_A_Log
 write.csv(Matchups_201617_With_Stats,file="Matchups_201617_With_Stats.csv", row.names=FALSE);
 
 write.csv(Matchups_201718_With_Stats,file="Matchups_201718_With_Stats.csv", row.names=FALSE);
+
+
+
 
