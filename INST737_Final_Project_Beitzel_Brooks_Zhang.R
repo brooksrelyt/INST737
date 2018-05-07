@@ -32,4 +32,13 @@ Matchups_201617_With_Stats <- merge(Matchups_201617_With_Stats, Season_Stats_201
 # Sorting the above data frame by Date the game was played (ascending)
 Matchups_201617_With_Stats <- Matchups_201617_With_Stats[order(as.Date(Matchups_201617_With_Stats$Date, format="%m/%d/%Y")),];
 
-write.csv(Matchups_201617_With_Stats,file="Matchups_201617_With_Stats.csv", row.names=FALSE)
+#Create columns that compare statistical categories between two teams
+Matchups_201617_With_Stats$ORtg_Difference <- Matchups_201617_With_Stats$ORtg.x - Matchups_201617_With_Stats$ORtg.y;
+Matchups_201617_With_Stats$True_Shooting_Percentage_Difference <- Matchups_201617_With_Stats$True_Shooting_Percentage.x - Matchups_201617_With_Stats$True_Shooting_Percentage.y;
+Matchups_201617_With_Stats$True_Rebound_Percentage_Difference <- Matchups_201617_With_Stats$True_Rebound_Percentage.x - Matchups_201617_With_Stats$True_Rebound_Percentage.y;
+Matchups_201617_With_Stats$Steal_Percentage_Difference <- Matchups_201617_With_Stats$Steal_Percentage.x - Matchups_201617_With_Stats$Steal_Percentage.y;
+Matchups_201617_With_Stats$TO_Percentage_Difference <- Matchups_201617_With_Stats$TO_Percentage.x - Matchups_201617_With_Stats$TO_Percentage.y;
+Matchups_201617_With_Stats$Block_Percentage_Difference <- Matchups_201617_With_Stats$Block_Percentage.x - Matchups_201617_With_Stats$Block_Percentage.y;
+
+#Export the data frame to excel
+write.csv(Matchups_201617_With_Stats,file="Matchups_201617_With_Stats.csv", row.names=FALSE);
