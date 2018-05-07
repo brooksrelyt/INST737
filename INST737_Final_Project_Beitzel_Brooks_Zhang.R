@@ -6,6 +6,8 @@
 #   Our project is creating a predictive analytics model for NCAA Division 1 Men's Basketball, in order to help determine when two teams play against 
 #   each other during the Division 1 regular season and also the post-season single elimination tournaments (March Madness and NIT), which team will win each matchup. 
 
+install.packages("expss")
+
 # We'd like to cite the website Sports-Referece.com for this project, as that website is where we were able to retrieve data regarding season-long statistics for the teams that we analyze,
 # as well as the team matchups (and the winners of the matchups) that we use to train our prediction model
 
@@ -32,7 +34,7 @@ Matchups_201617_With_Stats <- merge(Matchups_201617_With_Stats, Season_Stats_201
 # Sorting the above data frame by Date the game was played (ascending)
 Matchups_201617_With_Stats <- Matchups_201617_With_Stats[order(as.Date(Matchups_201617_With_Stats$Date, format="%m/%d/%Y")),];
 
-#Create columns that compare statistical categories between two teams
+# Create columns that compare statistical categories between two teams for the 2016-17 year
 Matchups_201617_With_Stats$ORtg_Difference <- Matchups_201617_With_Stats$ORtg.x - Matchups_201617_With_Stats$ORtg.y;
 Matchups_201617_With_Stats$True_Shooting_Percentage_Difference <- Matchups_201617_With_Stats$True_Shooting_Percentage.x - Matchups_201617_With_Stats$True_Shooting_Percentage.y;
 Matchups_201617_With_Stats$True_Rebound_Percentage_Difference <- Matchups_201617_With_Stats$True_Rebound_Percentage.x - Matchups_201617_With_Stats$True_Rebound_Percentage.y;
@@ -40,5 +42,37 @@ Matchups_201617_With_Stats$Steal_Percentage_Difference <- Matchups_201617_With_S
 Matchups_201617_With_Stats$TO_Percentage_Difference <- Matchups_201617_With_Stats$TO_Percentage.x - Matchups_201617_With_Stats$TO_Percentage.y;
 Matchups_201617_With_Stats$Block_Percentage_Difference <- Matchups_201617_With_Stats$Block_Percentage.x - Matchups_201617_With_Stats$Block_Percentage.y;
 
-#Export the data frame to excel
+# Creating our model to help determine what statistical categories help predict which team wins
+# This is the command which creates the logistic regression model using the below predictor variables
+logit_model <- glm(Team_A_Won ~ ORtg_Difference + True_Shooting_Percentage_Difference + True_Rebound_Percentage_Difference + Steal_Percentage_Difference + TO_Percentage_Difference + Block_Percentage_Difference, data = Matchups_201617_With_Stats, family = "binomial");
+summary(logit_model);
+
+# Here will create a data frame that will hold the matchups for 16-17, as well as the season-long statistics for the two teams in the matchup
+Matchups_201718_With_Stats <- merge(Matchups_201718, Season_Stats_201718, by.x=c("Team_A_ID"), by.y=c("School_ID"));
+Matchups_201718_With_Stats <- merge(Matchups_201718_With_Stats, Season_Stats_201718, by.x=c("Team_B_ID"), by.y=c("School_ID"));
+
+# Create columns that compare statistical categories between two teams for the 2017-18 year
+Matchups_201718_With_Stats$ORtg_Difference <- Matchups_201718_With_Stats$ORtg.x - Matchups_201718_With_Stats$ORtg.y;
+Matchups_201718_With_Stats$True_Shooting_Percentage_Difference <- Matchups_201718_With_Stats$True_Shooting_Percentage.x - Matchups_201718_With_Stats$True_Shooting_Percentage.y;
+Matchups_201718_With_Stats$True_Rebound_Percentage_Difference <- Matchups_201718_With_Stats$True_Rebound_Percentage.x - Matchups_201718_With_Stats$True_Rebound_Percentage.y;
+Matchups_201718_With_Stats$Steal_Percentage_Difference <- Matchups_201718_With_Stats$Steal_Percentage.x - Matchups_201718_With_Stats$Steal_Percentage.y;
+Matchups_201718_With_Stats$TO_Percentage_Difference <- Matchups_201718_With_Stats$TO_Percentage.x - Matchups_201718_With_Stats$TO_Percentage.y;
+Matchups_201718_With_Stats$Block_Percentage_Difference <- Matchups_201718_With_Stats$Block_Percentage.x - Matchups_201718_With_Stats$Block_Percentage.y;
+
+# This created a new column with a prediction of the probability that the answer is correct/TRUE
+Matchups_201718_With_Stats$Team_A_logit_prediction <- predict(logit_model, Matchups_201718_With_Stats, type="response");
+
+# Using the probablity created above, make the guess of TRUE (correct) or FALSE (incorrect)
+Matchups_201718_With_Stats$Team_A_Logit_Model_Predict <- ifelse(Matchups_201718_With_Stats$Team_A_logit_prediction >= 0.5, 1, 0);
+
+library(expss)
+
+# Output the results of our logistic regression predictions versus the actual correct answers
+cro(Matchups_201718_With_Stats$Team_A_Won, Matchups_201718_With_Stats$Team_A_Logit_Model_Predict);
+
+
+
+# Export the data frame to excel
 write.csv(Matchups_201617_With_Stats,file="Matchups_201617_With_Stats.csv", row.names=FALSE);
+
+write.csv(Matchups_201718_With_Stats,file="Matchups_201718_With_Stats.csv", row.names=FALSE);
