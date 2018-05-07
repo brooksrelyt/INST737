@@ -62,7 +62,7 @@ Matchups_201718_With_Stats$Block_Percentage_Difference <- Matchups_201718_With_S
 # This created a new column with a prediction of the probability that Team A Wins (1) or Loses (0)
 Matchups_201718_With_Stats$Team_A_logit_prediction <- predict(logit_model, Matchups_201718_With_Stats, type="response");
 
-# Using the probablity created above, make the guess of whether Team A Wins (1) or Loses()
+# Using the probabality created above, make the guess of whether Team A Wins (1) or Loses(0)
 Matchups_201718_With_Stats$Team_A_Logit_Model_Predict <- ifelse(Matchups_201718_With_Stats$Team_A_logit_prediction >= 0.5, 1, 0);
 
 #Bring the library for the function below used to compare the actual game results with our prediction results
