@@ -26,8 +26,8 @@ Matchups_201617 <- read.csv(url("https://raw.githubusercontent.com/brooksrelyt/I
 
 
 # Here will create a data frame that will hold the matchups for 16-17, as well as the season-long statistics for the two teams in the matchup
-Matchups_201617_With_Stats <- merge(Matchups_201617, Season_Stats_201617, by.x=c("Winning_Schl_ID"), by.y=c("School_ID"));
-Matchups_201617_With_Stats <- merge(Matchups_201617_With_Stats, Season_Stats_201617, by.x=c("Losing_Schl_ID"), by.y=c("School_ID"));
+Matchups_201617_With_Stats <- merge(Matchups_201617, Season_Stats_201617, by.x=c("Team_A_ID"), by.y=c("School_ID"));
+Matchups_201617_With_Stats <- merge(Matchups_201617_With_Stats, Season_Stats_201617, by.x=c("Team_B_ID"), by.y=c("School_ID"));
 
 # Sorting the above data frame by Date the game was played (ascending)
 Matchups_201617_With_Stats <- Matchups_201617_With_Stats[order(as.Date(Matchups_201617_With_Stats$Date, format="%m/%d/%Y")),];
