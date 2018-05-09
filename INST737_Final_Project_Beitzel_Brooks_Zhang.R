@@ -41,11 +41,22 @@ Matchups_201617_With_Stats$True_Rebound_Percentage_Difference <- Matchups_201617
 Matchups_201617_With_Stats$Steal_Percentage_Difference <- Matchups_201617_With_Stats$Steal_Percentage.x - Matchups_201617_With_Stats$Steal_Percentage.y;
 Matchups_201617_With_Stats$TO_Percentage_Difference <- Matchups_201617_With_Stats$TO_Percentage.x - Matchups_201617_With_Stats$TO_Percentage.y;
 Matchups_201617_With_Stats$Block_Percentage_Difference <- Matchups_201617_With_Stats$Block_Percentage.x - Matchups_201617_With_Stats$Block_Percentage.y;
+Matchups_201617_With_Stats$X3PAr.x_Difference <- Matchups_201617_With_Stats$X3PAr.x - Matchups_201617_With_Stats$X3PAr.y;
+Matchups_201617_With_Stats$FTr.x_Difference <- Matchups_201617_With_Stats$FTr.x - Matchups_201617_With_Stats$FTr.y;
+Matchups_201617_With_Stats$Pace_Difference <- Matchups_201617_With_Stats$Pace.x - Matchups_201617_With_Stats$Pace.y;
+Matchups_201617_With_Stats$Overall_SOS_Difference <- Matchups_201617_With_Stats$Overall_SOS.x - Matchups_201617_With_Stats$Overall_SOS.y;
+
 
 # Creating our model to help determine what statistical categories help predict which team wins
 # This is the command which creates the logistic regression model using the below predictor variables
-logit_model <- glm(Team_A_Won ~ ORtg_Difference + True_Shooting_Percentage_Difference + True_Rebound_Percentage_Difference + Steal_Percentage_Difference + TO_Percentage_Difference + Block_Percentage_Difference, data = Matchups_201617_With_Stats, family = "binomial");
+
+# Our baseline model
+logit_model <- glm(Team_A_Won ~ Block_Percentage_Difference, data = Matchups_201617_With_Stats, family = "binomial");
 summary(logit_model);
+
+# Our best found model (From Ty)
+logit_model2 <- glm(Team_A_Won ~ Overall_SOS_Difference + Pace_Difference + FTr.x_Difference + X3PAr.x_Difference + ORtg_Difference + True_Shooting_Percentage_Difference + True_Rebound_Percentage_Difference + Steal_Percentage_Difference + TO_Percentage_Difference + Block_Percentage_Difference, data = Matchups_201617_With_Stats, family = "binomial");
+summary(logit_model2);
 
 # Here we will create a data frame that will hold the matchups for 17-18, as well as the season-long statistics for the two teams in the matchup
 Matchups_201718_With_Stats <- merge(Matchups_201718, Season_Stats_201718, by.x=c("Team_A_ID"), by.y=c("School_ID"));
@@ -58,7 +69,12 @@ Matchups_201718_With_Stats$True_Rebound_Percentage_Difference <- Matchups_201718
 Matchups_201718_With_Stats$Steal_Percentage_Difference <- Matchups_201718_With_Stats$Steal_Percentage.x - Matchups_201718_With_Stats$Steal_Percentage.y;
 Matchups_201718_With_Stats$TO_Percentage_Difference <- Matchups_201718_With_Stats$TO_Percentage.x - Matchups_201718_With_Stats$TO_Percentage.y;
 Matchups_201718_With_Stats$Block_Percentage_Difference <- Matchups_201718_With_Stats$Block_Percentage.x - Matchups_201718_With_Stats$Block_Percentage.y;
+Matchups_201718_With_Stats$X3PAr.x_Difference <- Matchups_201718_With_Stats$X3PAr.x - Matchups_201718_With_Stats$X3PAr.y;
+Matchups_201718_With_Stats$FTr.x_Difference <- Matchups_201718_With_Stats$FTr.x - Matchups_201718_With_Stats$FTr.y;
+Matchups_201718_With_Stats$Pace_Difference <- Matchups_201718_With_Stats$Pace.x - Matchups_201718_With_Stats$Pace.y;
+Matchups_201718_With_Stats$Overall_SOS_Difference <- Matchups_201718_With_Stats$Overall_SOS.x - Matchups_201718_With_Stats$Overall_SOS.y;
 
+# Testing our baseline model
 # This created a new column with a prediction of the probability that Team A Wins (1) or Loses (0)
 Matchups_201718_With_Stats$Team_A_logit_prediction <- predict(logit_model, Matchups_201718_With_Stats, type="response");
 
@@ -71,6 +87,10 @@ library(expss)
 # Output the results of our logistic regression predictions versus the actual Team A game results
 cro(Matchups_201718_With_Stats$Team_A_Won, Matchups_201718_With_Stats$Team_A_Logit_Model_Predict);
 
+# Our best Logit Model (From Ty)
+Matchups_201718_With_Stats$Team_A_logit_prediction2 <- predict(logit_model2, Matchups_201718_With_Stats, type="response");
+Matchups_201718_With_Stats$Team_A_Logit_Model_Predict2 <- ifelse(Matchups_201718_With_Stats$Team_A_logit_prediction2 >= 0.5, 1, 0);
+cro(Matchups_201718_With_Stats$Team_A_Won, Matchups_201718_With_Stats$Team_A_Logit_Model_Predict2);
 
 
 # Export the data frame to CSV files for comparison outside of R, in Excel
